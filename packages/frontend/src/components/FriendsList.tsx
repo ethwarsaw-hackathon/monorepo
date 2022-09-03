@@ -1,38 +1,45 @@
-import { Checkbox, CircularProgress, Grid, TextField } from "@mui/material";
+import { Box, Checkbox, CircularProgress, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FriendCard } from "../components/FriendCard";
 import { apiFetch } from "../utils/apiFetch";
 import { CenterWidth } from "./CenterWidth";
 
-export function FriendsList() {
-    const [users, setUsers] = useState<null | Users>();
+export function FriendsList(props: Props) {
+    const [users, setUsers] = useState<null | UsersAmount[]>();
+
     useEffect(() => {
         async function callback() {
             if (!users) {
                 const response = await apiFetch('/twitter-friends');
                 // TODO: this should be in a shared library between backend + frontend
                 const users: {
-                    usersResponse: Users;
+                    usersResponse: Users[];
                 } = await response.json();
-                setUsers(users.usersResponse.slice(0, 5));
+                const userResponse = users.usersResponse.slice(0, 5);
+                setUsers(userResponse.map((item) => {
+                    return {
+                        ...item,
+                        amount: props.totalAmount / userResponse.length
+                    };
+                }));
             }
         }
         callback();
     });
 
     return (
-        <React.Fragment>
+        <Box style={{ background: 'white' }}>
             <CenterWidth>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <FriendTable users={users} />
                 </Grid>
             </CenterWidth>
-        </React.Fragment>
+        </Box>
     )
 }
 
 
-function FriendTable({ users }: { users?: Users | null }) {
+function FriendTable({ users }: { users?: UsersAmount[] | null}) {
     if (!users) {
         return (
             <CircularProgress />
@@ -43,22 +50,28 @@ function FriendTable({ users }: { users?: Users | null }) {
         <React.Fragment>
             <Grid container direction={'row'}>
                 <Grid item xs={7}>
-                    Contacts
+                    <Typography style={{ padding: '5px', paddingLeft: '10px' }}>
+                        Contacts
+                    </Typography>
                 </Grid>
                 <Grid item xs={5}>
-                    Amount
+                    <Typography style={{ padding: '5px', paddingLeft: '10px' }}>
+                        Amount
+                    </Typography>
                 </Grid>
-                {users.map((item) => {
+                {users.map((item, index) => {
                     return (
-                        <React.Fragment>
+                        <React.Fragment key={index}>
                             <Grid item xs={1}>
-                                <Checkbox></Checkbox>
+                                <Checkbox style={{margin: '25%'}}></Checkbox>
                             </Grid>
                             <Grid item xs={6}>
                                 <FriendCard screenName={item.screenName} image={item.image || ''} name={item.name} />
                             </Grid>
                             <Grid item xs={5}>
-                                <TextField />
+                                <TextField value={item.amount} onChange={() => {
+                                    
+                                }} />
                             </Grid>
                         </React.Fragment>
                     );
@@ -68,7 +81,16 @@ function FriendTable({ users }: { users?: Users | null }) {
     );
 }
 
-type Users = Array<{
+interface Users {
     name: string; image?: string;
-    screenName: string
-}>;
+    screenName: string;
+    totalAmount: number;
+};
+
+interface UsersAmount extends Users {
+    amount: number;
+};
+
+interface Props {
+    totalAmount: number;
+}

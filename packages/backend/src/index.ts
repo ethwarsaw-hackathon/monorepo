@@ -62,6 +62,17 @@ router.get('/callback', async (ctx) => {
 
 router.get('/twitter-friends', async (ctx) => {
     const state = ctx.query.state;
+    const usersResponse = [
+        {
+            name: 'test',
+            iamge: null,
+        },
+        {
+            name: 'test2',
+            iamge: null,
+        }
+    ];
+    /*
     if (typeof state !== 'string' || !(state in authClients)) {
         throw new Error('You sent a fake callback.')
     }
@@ -79,7 +90,7 @@ router.get('/twitter-friends', async (ctx) => {
                 image: user.profile_image_url,
             })
         }
-    }
+    }*/
     ctx.response.body = {
         usersResponse
     };

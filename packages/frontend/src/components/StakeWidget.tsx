@@ -1,25 +1,33 @@
-import { Grid, InputAdornment, TextField, Typography } from "@mui/material";
+import { InputAdornment, TextField, Typography } from "@mui/material";
 import React from "react";
 import { CenterWidth } from "./CenterWidth";
 
 
 export function StakeWidget(props: Props) {
     return (
-        <React.Fragment>
-            <CenterWidth>
-                <Grid item xs={6}>
-                    <Typography>
-                        How much would you like to stake ?
-                    </Typography>
+        <CenterWidth style={{ backgroundColor: 'white', height: '100%', width: '90%' }}>
+            <React.Fragment>
+                <Typography variant="h4" gutterBottom style={{ width: '80%', marginLeft: '5%', marginRight: '5%' }}>
+                    How much would you like to lend in total?
+                </Typography>
+                <div style={{ width: '100%' }}>
                     <TextField
+                        value={props.amount}
+                        onChange={(event) => {
+                            props.setAmount(parseInt(event.target.value) || 0);
+                        }}
+                        style={{ width: '80%', margin: '10%' }}
                         InputProps={{
                             endAdornment: <InputAdornment position="start">DAI</InputAdornment>,
                         }}
-                    > </TextField>
-                </Grid>
-            </CenterWidth>
-        </React.Fragment>
+                    />
+                </div>
+            </React.Fragment>
+        </CenterWidth >
     )
 }
 
-interface Props { }
+interface Props {
+    amount: number;
+    setAmount: (value: number) => void;
+}

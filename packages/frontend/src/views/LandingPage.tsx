@@ -1,22 +1,49 @@
-import { Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
+import React from "react";
+import { CenterScreen } from "../components/CenterScreen";
+import { CenterWidth } from "../components/CenterWidth";
+import { ConnectWithTwitterButton } from "../components/ConnectWithTwitterButton";
+import { NavBar } from "../components/NavBar";
 
 export function LandingPage() {
     return (
-        <div style={{ background: 'red', minHeight: '100%' }}>
-            <Grid container direction={'row'} style={{ minHeight: '100%' }}>
-                <Grid item xs={4}>
-                    <Grid
-                        container
-                        direction="column"
-                        alignItems="center"
-                        justifyContent="center">
-                        test2
+        <div style={{ height: '55%', backgroundImage: `url(${process.env.PUBLIC_URL}${'/rectangle.svg'})` }}>
+            <NavBar />
+            <CenterScreen>
+                <Grid container direction={'row'} style={{ minHeight: '55%' }}>
+                    <Grid item xs={4}>
+                        <Grid
+                            container
+                            direction="column"
+                            alignItems="center"
+                            justifyContent="center"
+                            style={{
+                                paddingLeft: '100px',
+                            }}
+                        >
+                            <Box>
+                                <Typography variant="h4" gutterBottom>
+                                    Lend to fam
+                                </Typography>
+                                <Typography>
+                                    Give and get access to financial support by vouching for people you know
+                                </Typography>
+                                <ConnectWithTwitterButton />
+                            </Box>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <CenterWidth>
+                            <React.Fragment>
+                                <Box style={{ width: '400px', height: '400px' }}>
+                                    <img alt={'people'} style={{ width: '100%' }} src={process.env.PUBLIC_URL + `${'/people.svg'}`} />
+                                </Box>
+                            </React.Fragment>
+                        </CenterWidth>
                     </Grid>
                 </Grid>
-                <Grid item xs={7}>
-                    test2
-                </Grid>
-            </Grid>
+            </CenterScreen>
+
         </div>
     )
 }
