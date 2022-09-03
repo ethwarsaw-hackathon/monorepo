@@ -1,9 +1,10 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import React from "react";
 import { CenterScreen } from "../components/CenterScreen";
 import { CenterWidth } from "../components/CenterWidth";
 import { ConnectWithTwitterButton } from "../components/ConnectWithTwitterButton";
 import { NavBar } from "../components/NavBar";
+import { Metamask } from "../utils/Metamask";
 
 export function LandingPage() {
     return (
@@ -28,7 +29,21 @@ export function LandingPage() {
                                 <Typography>
                                     Give and get access to financial support by vouching for people you know
                                 </Typography>
-                                <ConnectWithTwitterButton />
+                                <Metamask>
+                                    {
+                                        ({ accountAddress, requestAccount }) => {
+                                            if (!accountAddress) {
+                                                return (
+                                                    <Button onClick={requestAccount}>Connect metamask</Button>
+                                                )
+                                            } else {
+                                                return (
+                                                    <ConnectWithTwitterButton accountAddress={accountAddress} />
+                                                )
+                                            }
+                                        }
+                                    }
+                                </Metamask>
                             </Box>
                         </Grid>
                     </Grid>

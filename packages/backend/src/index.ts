@@ -5,8 +5,15 @@ import crypto from 'crypto';
 import cors from '@koa/cors';
 import { authClient, authClients } from './twitter/TwitterProductionApi';
 import Client from 'twitter-api-sdk';
-import { config, fetchAccountStakes, fetchAccountTrusted, fetchAccountTrusting, fetchStakers } from '@unioncredit/data'
-import { BigNumber } from 'bignumber.js';
+import { config } from '@unioncredit/data'
+import { stateAccount } from './account/AccountState';
+import { MockContainer } from './container/MockContainer';
+import { UnionDataFetcher } from './union/UnionDataFetcher';
+import { TwitterDataFetcher } from './twitter/TwitterDataFetcher';
+
+
+const container = new MockContainer().create();
+
 
 config.set('chainId', '42')
 
@@ -31,11 +38,19 @@ router.get('/abi', async (ctx) => {
 });
 
 router.get('/twitter-auth', async (ctx) => {
+    const accountAddress = ctx.query.accountAddress;
+
+    if (!(typeof accountAddress === 'string')) {
+        throw new Error('AccountAddress is necerrary');
+    }
+
     const state = crypto.randomUUID();
     const authUrl = authClient.generateAuthURL({
         code_challenge_method: "s256",
         state,
     });
+    stateAccount[state] = accountAddress;
+
     ctx.response.body = {
         authUrl,
         state
@@ -56,101 +71,24 @@ router.get('/callback', async (ctx) => {
     }
     authClients[state] = new Client(realToken)
 
+    const account = stateAccount[state];
+
     ctx.status = 301;
-    ctx.redirect(`http://localhost:3000/twitter?state=${state}`);
+    ctx.redirect(`http://localhost:3000/twitter?state=${state}&account=${account}`);
 });
 
 router.get('/twitter-friends', async (ctx) => {
     const state = ctx.query.state;
-    const usersResponse = [
-        {
-            name: 'test',
-            iamge: null,
-        },
-        {
-            name: 'test2',
-            iamge: null,
-        }
-    ];
-    /*
-    if (typeof state !== 'string' || !(state in authClients)) {
-        throw new Error('You sent a fake callback.')
+    if (typeof state !== 'string') {
+        throw new Error('bad input')
     }
-    const client = authClients[state];
-    const results = await client.users.usersIdFollowing('1416633667', {
-        max_results: 100,
-        "user.fields": ['profile_image_url']
-    })
-    const users = results.data;
-    const usersResponse: Array<{ name: string; image?: string }> = [];
-    for (const user of (users || [])) {
-        if (user.username) {
-            usersResponse.push({
-                name: user.name,
-                image: user.profile_image_url,
-            })
-        }
-    }*/
+    container.get(TwitterDataFetcher).setState(state);
+    const usersResponse = container.get(TwitterDataFetcher).getFollowing();
+
     ctx.response.body = {
         usersResponse
     };
     ctx.response.status = 200;
-});
-
-router.get('/union-account-trusting-me', async (ctx) => {
-    /*
-        okay, so the contracts are not avaible here.
-
-        I think we create a child contract or something when the 
-        stake is started.
-
-        i.e 0xd0f46a5d48596409264d4eFc1f3B229878fFf743
-
-    */
-    if (typeof ctx.query.value === 'string') {
-        const accountState = await fetchAccountTrusting(
-            ctx.query.value
-        );
-
-        //ctx.response.body = accountState;
-        ctx.response.body = accountState.map((item) => {
-            return {
-                ...item,
-                amount: new BigNumber(item.amount).div(new BigNumber(10).pow(18)).toString()
-            }
-        });
-        ctx.response.status = 200;
-    } else {
-        ctx.response.body = 'missing value parameters';
-        ctx.response.status = 400;
-    }
-});
-
-router.get('/union-account-i-trust', async (ctx) => {
-    /*
-        okay, so the contracts are not avaible here.
-
-        I think we create a child contract or something when the 
-        stake is started.
-
-        i.e 0xd0f46a5d48596409264d4eFc1f3B229878fFf743
-    */
-    if (typeof ctx.query.value === 'string') {
-        const accountState = await fetchAccountTrusted(
-            ctx.query.value
-        );
-
-        ctx.response.body = accountState.map((item) => {
-            return {
-                ...item,
-                amount: new BigNumber(item.amount).div(new BigNumber(10).pow(18)).toString()
-            }
-        });
-        ctx.response.status = 200;
-    } else {
-        ctx.response.body = 'missing value parameters';
-        ctx.response.status = 400;
-    }
 });
 
 router.get('/union-account-stakes', async (ctx) => {
@@ -161,17 +99,11 @@ router.get('/union-account-stakes', async (ctx) => {
         stake is started.
 
         i.e 0xd0f46a5d48596409264d4eFc1f3B229878fFf743
+            - nooo, this is wrong. This is just antoher person domain
+            - I thin the problem is with the grapth
     */
     if (typeof ctx.query.value === 'string') {
-        const accountState = await fetchAccountStakes(
-            ctx.query.value
-        );
-
-        ctx.response.body = accountState.map((item) => {
-            return {
-                ...item,
-            }
-        });
+        ctx.response.body = await container.get(UnionDataFetcher).getStake({ address: ctx.query.value });
         ctx.response.status = 200;
     } else {
         ctx.response.body = 'missing value parameters';

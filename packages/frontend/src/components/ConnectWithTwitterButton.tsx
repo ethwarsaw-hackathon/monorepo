@@ -1,12 +1,16 @@
 import { Button } from "@mui/material";
 import { apiFetch } from "../utils/apiFetch";
 
-export function ConnectWithTwitterButton() {
+export function ConnectWithTwitterButton(props: Props) {
     return (
         <Button variant="text" onClick={async () => {
-            const { authUrl, state } = await (await apiFetch('/twitter-auth')).json();
+            const { authUrl, state } = await (await apiFetch(`/twitter-auth?accountAddress=${props.accountAddress}`)).json();
             window.localStorage.setItem('state', state);
             window.open(authUrl);
         }}>Login with twitter</Button>
     )
+}
+
+interface Props {
+    accountAddress: string;
 }

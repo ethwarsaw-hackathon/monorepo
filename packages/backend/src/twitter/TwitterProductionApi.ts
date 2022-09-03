@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import { auth, Client } from "twitter-api-sdk";
+import { TwitterDataFetcher, Users } from './TwitterDataFetcher';
 dotenv.config()
 
 const twitterBearerToken = process.env.TWITTER_BEARER_TOKEN;
@@ -20,7 +21,33 @@ export const authClient = new auth.OAuth2User({
 
 export const authClients: Record<string, Client> = {}
 
+export class TwitterProductionApi implements TwitterDataFetcher {
+    private state?: string;
 
-export function getFollowing() {
+    public setState(state: string): void {
+        this.state = state;
+    }
 
+    public async getFollowing(): Promise<Users> {
+        if (typeof this.state !== 'string' || !(this.state in authClients)) {
+            throw new Error('You sent a fake callback.')
+        }
+        const client = authClients[this.state];
+        const results = await client.users.usersIdFollowing('1416633667', {
+            max_results: 100,
+            "user.fields": ['profile_image_url']
+        })
+        const users = results.data;
+        const usersResponse: Users = [];
+        for (const user of (users || [])) {
+            if (user.username) {
+                usersResponse.push({
+                    name: user.name,
+                    image: user.profile_image_url,
+                })
+            }
+        }
+
+        return usersResponse;
+    }
 }
