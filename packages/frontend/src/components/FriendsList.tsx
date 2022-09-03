@@ -1,5 +1,5 @@
-import { Box, Checkbox, CircularProgress, Grid, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Checkbox, CircularProgress, Grid, InputAdornment, TextField, Typography } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import { FriendCard } from "../components/FriendCard";
 import { apiFetch } from "../utils/apiFetch";
 import { CenterWidth } from "./CenterWidth";
@@ -28,10 +28,10 @@ export function FriendsList(props: Props) {
     });
 
     return (
-        <Box style={{ background: 'white' }}>
+        <Box style={{ background: 'white', height: '100%', width: '90%', float: 'right' }}>
             <CenterWidth>
                 <Grid item xs={12}>
-                    <FriendTable users={users} />
+                    <FriendTable setUsers={setUsers} users={users} />
                 </Grid>
             </CenterWidth>
         </Box>
@@ -39,7 +39,7 @@ export function FriendsList(props: Props) {
 }
 
 
-function FriendTable({ users }: { users?: UsersAmount[] | null}) {
+function FriendTable({ users, setUsers }: { users?: UsersAmount[] | null; setUsers: (users?: UsersAmount[]) => void }) {
     if (!users) {
         return (
             <CircularProgress />
@@ -61,21 +61,43 @@ function FriendTable({ users }: { users?: UsersAmount[] | null}) {
                 </Grid>
                 {users.map((item, index) => {
                     return (
-                        <React.Fragment key={index}>
-                            <Grid item xs={1}>
-                                <Checkbox style={{margin: '25%'}}></Checkbox>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <FriendCard screenName={item.screenName} image={item.image || ''} name={item.name} />
-                            </Grid>
-                            <Grid item xs={5}>
-                                <TextField value={item.amount} onChange={() => {
-                                    
-                                }} />
-                            </Grid>
-                        </React.Fragment>
-                    );
+                        <UserRow user={item} key={index} onChange={(user) => {
+                            users[index] = user;
+                            console.log(user);;
+                            setUsers([...users])
+                        }} />
+                    )
                 })}
+            </Grid>
+        </React.Fragment>
+    );
+}
+
+function UserRow({ user, onChange }: { user: UsersAmount, onChange: (user: UsersAmount) => void }) {
+    const ref = useRef();
+    return (
+        <React.Fragment>
+            <Grid item xs={1}>
+                <Checkbox style={{ margin: '25%' }}></Checkbox>
+            </Grid>
+            <Grid item xs={6}>
+                <FriendCard screenName={user.screenName} image={user.image || ''} name={user.name} />
+            </Grid>
+            <Grid item xs={5}>
+                <TextField style={{ paddingRight: '5%' }} defaultValue={user.amount} inputRef={ref}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="start">DAI</InputAdornment>,
+                    }}
+                    onBlur={() => {
+                        const amount = ref.current && ((ref.current as { value?: string })).value
+                        if (amount) {
+                            onChange({
+                                ...user,
+                                amount: parseInt(amount),
+                            })
+                        }
+                    }}
+                />
             </Grid>
         </React.Fragment>
     );

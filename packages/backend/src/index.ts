@@ -1,3 +1,5 @@
+import { MockContainer } from './container/MockContainer';
+
 import Koa from 'koa';
 import Router from 'koa-router';
 import web3 from 'web3';
@@ -7,7 +9,6 @@ import { authClient, authClients } from './twitter/TwitterProductionApi';
 import Client from 'twitter-api-sdk';
 import { config } from '@unioncredit/data'
 import { stateAccount } from './account/AccountState';
-import { MockContainer } from './container/MockContainer';
 import { UnionDataFetcher } from './union/UnionDataFetcher';
 import { TwitterDataFetcher } from './twitter/TwitterDataFetcher';
 
@@ -83,7 +84,7 @@ router.get('/twitter-friends', async (ctx) => {
         throw new Error('bad input')
     }
     container.get(TwitterDataFetcher).setState(state);
-    const usersResponse = container.get(TwitterDataFetcher).getFollowing();
+    const usersResponse = await container.get(TwitterDataFetcher).getFollowing();
 
     ctx.response.body = {
         usersResponse

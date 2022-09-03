@@ -1,16 +1,11 @@
-import { TextField, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
 import React from "react";
 
 export function FriendCard(props: Props) {
     return (
         <ListItem alignItems="flex-start">
-            <ListItemAvatar>
-                <Avatar alt={props.name} src={props.image} />
-            </ListItemAvatar>
             <ListItemText
                 primary={props.name}
                 secondary={
@@ -21,7 +16,7 @@ export function FriendCard(props: Props) {
                             variant="body2"
                             color="text.primary"
                         >
-                            {props.screenName}
+                            @{props.screenName}
                         </Typography>
                     </React.Fragment>
                 }

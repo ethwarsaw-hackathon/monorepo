@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import { injectable } from 'inversify';
 import { auth, Client } from "twitter-api-sdk";
 import { TwitterDataFetcher, Users } from './TwitterDataFetcher';
 dotenv.config()
@@ -21,6 +22,7 @@ export const authClient = new auth.OAuth2User({
 
 export const authClients: Record<string, Client> = {}
 
+@injectable()
 export class TwitterProductionApi implements TwitterDataFetcher {
     private state?: string;
 
@@ -44,6 +46,7 @@ export class TwitterProductionApi implements TwitterDataFetcher {
                 usersResponse.push({
                     name: user.name,
                     image: user.profile_image_url,
+                    screenName: user.username,
                 })
             }
         }

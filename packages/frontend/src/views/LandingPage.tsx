@@ -1,6 +1,5 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import React from "react";
-import { CenterScreen } from "../components/CenterScreen";
 import { CenterWidth } from "../components/CenterWidth";
 import { ConnectWithTwitterButton } from "../components/ConnectWithTwitterButton";
 import { NavBar } from "../components/NavBar";
@@ -8,10 +7,10 @@ import { Metamask } from "../utils/Metamask";
 
 export function LandingPage() {
     return (
-        <div style={{ height: '55%', backgroundImage: `url(${process.env.PUBLIC_URL}${'/rectangle.svg'})` }}>
+        <div style={{ height: '100%', backgroundImage: `url(${process.env.PUBLIC_URL}${'/rectangle.svg'})` }}>
             <NavBar />
-            <CenterScreen>
-                <Grid container direction={'row'} style={{ minHeight: '55%' }}>
+            <CenterWidth>
+                <Grid container direction={'row'}>
                     <Grid item xs={4}>
                         <Grid
                             container
@@ -20,6 +19,7 @@ export function LandingPage() {
                             justifyContent="center"
                             style={{
                                 paddingLeft: '100px',
+                                paddingTop: '50px',
                             }}
                         >
                             <Box>
@@ -47,6 +47,7 @@ export function LandingPage() {
                             </Box>
                         </Grid>
                     </Grid>
+
                     <Grid item xs={7}>
                         <CenterWidth>
                             <React.Fragment>
@@ -57,7 +58,7 @@ export function LandingPage() {
                         </CenterWidth>
                     </Grid>
                 </Grid>
-            </CenterScreen>
+            </CenterWidth>
 
         </div>
     )

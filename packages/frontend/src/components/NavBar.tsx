@@ -1,11 +1,8 @@
-import React from "react";
 import {
     AppBar,
     Toolbar,
-    CssBaseline,
     Typography,
     Box,
-    IconButton,
 } from "@mui/material";
 export function NavBar() {
     return (
@@ -18,16 +15,6 @@ export function NavBar() {
                     </Typography>
                     <Typography variant="h6" component="div" sx={{ float: 'left', flexGrow: 1 }}>
                         Poruka
-                    </Typography>
-
-                    <Typography variant="h6" component="div" sx={{ float: 'right', padding: '5px' }}>
-                        News
-                    </Typography>
-                    <Typography variant="h6" component="div" sx={{ float: 'right', padding: '5px' }}>
-                        News
-                    </Typography>
-                    <Typography variant="h6" component="div" sx={{ float: 'right', padding: '5px' }}>
-                        News
                     </Typography>
                 </Toolbar>
             </AppBar>

@@ -6,4 +6,4 @@ export abstract class TwitterDataFetcher {
     public abstract getFollowing(): Promise<Users>;
 }
 
-export type Users = Array<{ name: string; image?: string }>;
+export type Users = Array<{ name: string; image?: string; screenName: string }>;

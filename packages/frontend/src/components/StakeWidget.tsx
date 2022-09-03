@@ -5,9 +5,9 @@ import { CenterWidth } from "./CenterWidth";
 
 export function StakeWidget(props: Props) {
     return (
-        <CenterWidth style={{ backgroundColor: 'white', height: '100%', width: '90%' }}>
+        <CenterWidth style={{ backgroundColor: 'white', height: '100%', width: '90%', float: 'left' }}>
             <React.Fragment>
-                <Typography variant="h4" gutterBottom style={{ width: '80%', marginLeft: '5%', marginRight: '5%' }}>
+                <Typography variant="h4" textAlign={'center'} gutterBottom style={{ width: '80%', marginLeft: '10%', marginRight: '10%' }}>
                     How much would you like to lend in total?
                 </Typography>
                 <div style={{ width: '100%' }}>
