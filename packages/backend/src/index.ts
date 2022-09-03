@@ -3,9 +3,13 @@ import Router from 'koa-router';
 import web3 from 'web3';
 import crypto from 'crypto';
 import cors from '@koa/cors';
-import { ResolveTwitterUsernameInteractor } from './idriss/ResolveTwitterUsernameInteractor';
 import { authClient, authClients } from './twitter/TwitterProductionApi';
 import Client from 'twitter-api-sdk';
+import { config, fetchAccountStakes, fetchAccountTrusted, fetchAccountTrusting, fetchStakers } from '@unioncredit/data'
+import { BigNumber } from 'bignumber.js';
+
+config.set('chainId', '42')
+
 
 var app = new Koa();
 var router = new Router();
@@ -70,21 +74,98 @@ router.get('/twitter-friends', async (ctx) => {
     const usersResponse: Array<{ name: string; image?: string }> = [];
     for (const user of (users || [])) {
         if (user.username) {
-            console.log(JSON.stringify(user))
             usersResponse.push({
                 name: user.name,
                 image: user.profile_image_url,
             })
-            /*
-            console.log([user.username, (await new ResolveTwitterUsernameInteractor().getEthereumAddress({ screenname: user.username }))])
-            console.log([(await new ResolveTwitterUsernameInteractor().getEthereumAddress({ screenname: 'hexxy0x' }))])
-            */
         }
     }
     ctx.response.body = {
         usersResponse
     };
     ctx.response.status = 200;
+});
+
+router.get('/union-account-trusting-me', async (ctx) => {
+    /*
+        okay, so the contracts are not avaible here.
+
+        I think we create a child contract or something when the 
+        stake is started.
+
+        i.e 0xd0f46a5d48596409264d4eFc1f3B229878fFf743
+
+    */
+    if (typeof ctx.query.value === 'string') {
+        const accountState = await fetchAccountTrusting(
+            ctx.query.value
+        );
+
+        //ctx.response.body = accountState;
+        ctx.response.body = accountState.map((item) => {
+            return {
+                ...item,
+                amount: new BigNumber(item.amount).div(new BigNumber(10).pow(18)).toString()
+            }
+        });
+        ctx.response.status = 200;
+    } else {
+        ctx.response.body = 'missing value parameters';
+        ctx.response.status = 400;
+    }
+});
+
+router.get('/union-account-i-trust', async (ctx) => {
+    /*
+        okay, so the contracts are not avaible here.
+
+        I think we create a child contract or something when the 
+        stake is started.
+
+        i.e 0xd0f46a5d48596409264d4eFc1f3B229878fFf743
+    */
+    if (typeof ctx.query.value === 'string') {
+        const accountState = await fetchAccountTrusted(
+            ctx.query.value
+        );
+
+        ctx.response.body = accountState.map((item) => {
+            return {
+                ...item,
+                amount: new BigNumber(item.amount).div(new BigNumber(10).pow(18)).toString()
+            }
+        });
+        ctx.response.status = 200;
+    } else {
+        ctx.response.body = 'missing value parameters';
+        ctx.response.status = 400;
+    }
+});
+
+router.get('/union-account-stakes', async (ctx) => {
+    /*
+        okay, so the contracts are not avaible here.
+
+        I think we create a child contract or something when the 
+        stake is started.
+
+        i.e 0xd0f46a5d48596409264d4eFc1f3B229878fFf743
+    */
+    if (typeof ctx.query.value === 'string') {
+        const accountState = await fetchAccountStakes(
+            ctx.query.value
+        );
+
+        ctx.response.body = accountState.map((item) => {
+            return {
+                ...item,
+            }
+        });
+        ctx.response.status = 200;
+    } else {
+        ctx.response.body = 'missing value parameters';
+        ctx.response.status = 400;
+    }
 });
 
 app
