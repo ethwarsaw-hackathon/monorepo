@@ -1,12 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk';
+import { FriendsList } from './views/FriendsList';
+import { LandingPage } from './views/LandingPage';
+import { TwitterConnect } from './views/TwitterConnect';
 
 function App() {
+  const params = new URLSearchParams(window.location.search);
+  const state = params.get('state');
+
+  if (state) {
+    window.localStorage.setItem('state', state);
+  }
+
   return (
-    
+    <React.Fragment>
+      <LandingPage/>
+    </React.Fragment>
   )
+
+  return (
+    <React.Fragment>
+      {
+        state ? (
+          <React.Fragment>
+            twitter list
+            <FriendsList />
+
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            connector
+            <TwitterConnect />
+          </React.Fragment>
+        )
+      }
+    </React.Fragment>
+  );
   /*
   return (
     <div className="App">
