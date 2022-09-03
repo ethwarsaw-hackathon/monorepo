@@ -57,7 +57,7 @@ router.get('/callback', async (ctx) => {
     authClients[state] = new Client(realToken)
 
     ctx.status = 301;
-    ctx.redirect(`http://localhost:3000/auth?state=${state}`);
+    ctx.redirect(`http://localhost:3000/twitter?state=${state}`);
 });
 
 router.get('/twitter-friends', async (ctx) => {

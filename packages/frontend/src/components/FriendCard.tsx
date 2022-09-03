@@ -1,14 +1,11 @@
-import { Grid, TextField, Typography } from "@mui/material";
-import List from '@mui/material/List';
+import { TextField, Typography } from "@mui/material";
 import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import React from "react";
 
 export function FriendCard(props: Props) {
-    console.log(props);
     return (
         <ListItem alignItems="flex-start">
             <ListItemAvatar>
@@ -24,23 +21,17 @@ export function FriendCard(props: Props) {
                             variant="body2"
                             color="text.primary"
                         >
-                            ???
+                            {props.screenName}
                         </Typography>
-                        <TextField/>
                     </React.Fragment>
                 }
             />
         </ListItem>
-
-        /*
-        <Grid>
-            Hello
-        </Grid>
-        */
     )
 }
 
 interface Props {
     name: string;
     image: string;
+    screenName: string;
 }
