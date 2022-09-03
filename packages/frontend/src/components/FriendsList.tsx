@@ -1,37 +1,14 @@
 import { Box, Checkbox, CircularProgress, Grid, InputAdornment, TextField, Typography } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { FriendCard } from "../components/FriendCard";
-import { apiFetch } from "../utils/apiFetch";
 import { CenterWidth } from "./CenterWidth";
 
 export function FriendsList(props: Props) {
-    const [users, setUsers] = useState<null | UsersAmount[]>();
-
-    useEffect(() => {
-        async function callback() {
-            if (!users) {
-                const response = await apiFetch('/twitter-friends');
-                // TODO: this should be in a shared library between backend + frontend
-                const users: {
-                    usersResponse: Users[];
-                } = await response.json();
-                const userResponse = users.usersResponse.slice(0, 5);
-                setUsers(userResponse.map((item) => {
-                    return {
-                        ...item,
-                        amount: props.totalAmount / userResponse.length
-                    };
-                }));
-            }
-        }
-        callback();
-    });
-
     return (
         <Box style={{ background: 'white', height: '100%', width: '90%', float: 'right' }}>
             <CenterWidth>
                 <Grid item xs={12}>
-                    <FriendTable setUsers={setUsers} users={users} />
+                    <FriendTable setUsers={props.setUsers} users={props.users} />
                 </Grid>
             </CenterWidth>
         </Box>
@@ -78,7 +55,10 @@ function UserRow({ user, onChange }: { user: UsersAmount, onChange: (user: Users
     return (
         <React.Fragment>
             <Grid item xs={1}>
-                <Checkbox style={{ margin: '25%' }}></Checkbox>
+                <Checkbox style={{ margin: '25%' }} onChange={(event) => onChange({
+                    ...user,
+                    give: event.target.checked,
+                })}></Checkbox>
             </Grid>
             <Grid item xs={6}>
                 <FriendCard screenName={user.screenName} image={user.image || ''} name={user.name} />
@@ -103,16 +83,19 @@ function UserRow({ user, onChange }: { user: UsersAmount, onChange: (user: Users
     );
 }
 
-interface Users {
+export interface Users {
     name: string; image?: string;
     screenName: string;
     totalAmount: number;
 };
 
-interface UsersAmount extends Users {
+export interface UsersAmount extends Users {
     amount: number;
+    give?: boolean;
 };
 
 interface Props {
-    totalAmount: number;
+    // totalAmount: number;
+    users?: UsersAmount[] | null;
+    setUsers: (users?: UsersAmount[]) => void
 }

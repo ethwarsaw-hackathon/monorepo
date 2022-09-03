@@ -4,6 +4,7 @@ import { useState } from "react";
 export function Metamask(props: Props) {
     const ethereum = (window as { ethereum?: any }).ethereum;
     const [accountAddress, setAccountAddress] = useState<string | null>();
+    const [signedMessage, setSignedMessage] = useState<boolean>(false);
     if (typeof ethereum === 'undefined') {
         return (
             <React.Fragment>No metamask :(</React.Fragment>
@@ -13,9 +14,15 @@ export function Metamask(props: Props) {
     return (
         props.children({
             accountAddress,
+            signedMessage,
+            sign: async () => {
+                const [account] = await ethereum.request({ method: 'eth_requestAccounts' });
+                await ethereum.request({ method: 'personal_sign', params: [ 'contract call', account ] });
+                setSignedMessage(false);
+            },
             requestAccount: async () => {
-                const account = await ethereum.request({ method: 'eth_requestAccounts' });
-                setAccountAddress(account[0]);
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                setAccountAddress(accounts[0]);
             },
         })
     )
@@ -24,7 +31,9 @@ export function Metamask(props: Props) {
 
 interface Props {
     children: (options: {
+        signedMessage: boolean;
         accountAddress?: string | null;
-        requestAccount: () => void
+        requestAccount: () => Promise<void>;
+        sign: () => Promise<void>;
     }) => JSX.Element;
 }

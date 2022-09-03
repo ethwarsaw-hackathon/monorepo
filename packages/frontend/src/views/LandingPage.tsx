@@ -59,7 +59,6 @@ export function LandingPage() {
                     </Grid>
                 </Grid>
             </CenterWidth>
-
         </div>
     )
 }

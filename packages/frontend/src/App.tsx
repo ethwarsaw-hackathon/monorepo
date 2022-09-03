@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { LandingPage } from './views/LandingPage';
 import { TwitterConnection } from './views/Connected';
+import { Done } from './views/Done';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="twitter" element={<TwitterConnection />} />
+        <Route path="sent" element={<Done />} />
       </Routes>
     </BrowserRouter>
   );

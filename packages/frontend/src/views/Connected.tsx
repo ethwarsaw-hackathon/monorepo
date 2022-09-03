@@ -1,19 +1,44 @@
 import { Button, Grid } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CenterWidth } from "../components/CenterWidth";
-import { FriendsList } from "../components/FriendsList";
+import { FriendsList, Users, UsersAmount } from "../components/FriendsList";
 import { NavBar } from "../components/NavBar";
 import { StakeWidget } from "../components/StakeWidget";
+import { apiFetch } from "../utils/apiFetch";
+import { Metamask } from "../utils/Metamask";
 import { LandingPage } from "./LandingPage";
 
 export function TwitterConnection() {
     const params = new URLSearchParams(window.location.search);
     const state = params.get('state');
     const [amount, setAmount] = useState(1000);
+    const [users, setUsers] = useState<null | UsersAmount[]>();
+
+    useEffect(() => {
+        async function callback() {
+            if (!users) {
+                const response = await apiFetch('/twitter-friends');
+                // TODO: this should be in a shared library between backend + frontend
+                const users: {
+                    usersResponse: Users[];
+                } = await response.json();
+                const userResponse = users.usersResponse.slice(0, 5);
+                setUsers(userResponse.map((item) => {
+                    return {
+                        ...item,
+                        amount: amount / userResponse.length
+                    };
+                }));
+            }
+        }
+        callback();
+    });
 
     if (state) {
         window.localStorage.setItem('state', state);
+
     }
+    const peopleCount = users?.filter((item) => item.give).length;
 
     return (
         <React.Fragment>
@@ -27,11 +52,22 @@ export function TwitterConnection() {
                                     <StakeWidget amount={amount} setAmount={setAmount} />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <FriendsList totalAmount={amount} />
+                                    <FriendsList setUsers={setUsers} users={users} />
                                 </Grid>
                                 <Grid item xs={12} style={{ paddingTop: '10px' }}>
                                     <CenterWidth>
-                                        <Button variant="contained">Send</Button>
+                                        <Metamask>
+                                            {
+                                                ({ sign }) => (
+                                                    <Button
+                                                        disabled={!peopleCount}
+                                                        variant="contained" onClick={async () => {
+                                                            await sign();
+                                                            window.location.replace(`/sent?people=${peopleCount}&amount=${amount}`)
+                                                        }}>Send</Button>
+                                                )
+                                            }
+                                        </Metamask>
                                     </CenterWidth>
                                 </Grid>
                             </Grid>
