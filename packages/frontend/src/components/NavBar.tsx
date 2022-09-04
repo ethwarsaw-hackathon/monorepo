@@ -4,6 +4,10 @@ import {
     Typography,
     Box,
 } from "@mui/material";
+import ReactDOM from "react-dom";
+import { Dropdown } from "react-overlays";
+import BorrowButton from "./BorrowButton";
+
 export function NavBar() {
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -16,6 +20,7 @@ export function NavBar() {
                     <Typography variant="h6" component="div" sx={{ float: 'left', flexGrow: 1 }}>
                         Poruka
                     </Typography>
+                    <BorrowButton />
                 </Toolbar>
             </AppBar>
         </Box>

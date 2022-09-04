@@ -10,7 +10,7 @@ export function LandingPage() {
         <div style={{ height: '100%', backgroundImage: `url(${process.env.PUBLIC_URL}${'/rectangle.svg'})` }}>
             <NavBar />
             <CenterWidth>
-                <Grid container direction={'row'}>
+                <Grid id="app-root" container direction={'row'}>
                     <Grid item xs={4}>
                         <Grid
                             container
@@ -34,7 +34,7 @@ export function LandingPage() {
                                         ({ accountAddress, requestAccount }) => {
                                             if (!accountAddress) {
                                                 return (
-                                                    <Button onClick={requestAccount}>Connect metamask</Button>
+                                                    <Button variant="contained" onClick={requestAccount}>Connect metamask</Button>
                                                 )
                                             } else {
                                                 return (

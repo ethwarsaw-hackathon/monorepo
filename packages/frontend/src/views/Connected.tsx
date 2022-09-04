@@ -64,9 +64,11 @@ export function TwitterConnection() {
                                                     <CenterWidth>
                                                         <React.Fragment>
                                                             <div>
-                                                                <RampWidget onEvent={async () => {
-                                                                    await sign();
-                                                                    window.location.replace(`/sent?people=${peopleCount}&amount=${amount}`)
+                                                                <RampWidget onEvent={async (e) => {
+                                                                    if (e.type === 'WIDGET_CLOSE') {
+                                                                        await sign();
+                                                                        window.location.replace(`/sent?people=${peopleCount}&amount=${amount}`)
+                                                                    }
                                                                 }} show={showRamp} amount={amount.toString()} />
                                                             </div>
                                                             <Button

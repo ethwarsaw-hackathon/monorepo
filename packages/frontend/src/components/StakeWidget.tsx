@@ -1,7 +1,6 @@
 import { InputAdornment, TextField, Typography } from "@mui/material";
 import React from "react";
 import { CenterWidth } from "./CenterWidth";
-import { RampWidget } from "./RampWidget";
 
 
 export function StakeWidget(props: Props) {
@@ -12,7 +11,7 @@ export function StakeWidget(props: Props) {
                     How much would you like to lend in total?
                 </Typography>
                 <div style={{ width: '100%' }}>
-                    <TextField
+                <TextField
                         value={props.amount}
                         onChange={(event) => {
                             props.setAmount(parseInt(event.target.value) || 0);

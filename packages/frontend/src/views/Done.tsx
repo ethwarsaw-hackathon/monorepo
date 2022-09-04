@@ -11,7 +11,7 @@ export function Done() {
         <div style={{ height: '100%', backgroundImage: `url(${process.env.PUBLIC_URL}${'/rectangle.svg'})` }}>
             <NavBar />
             <CenterWidth>
-                <Box style={{background: 'white', width: '300px', height: '300px'}}>
+                <Box id="app-root" style={{background: 'white', width: '300px', height: '300px'}}>
                     <Typography variant="h4" gutterBottom textAlign={'center'}>
                         Sucsess!
                     </Typography>
