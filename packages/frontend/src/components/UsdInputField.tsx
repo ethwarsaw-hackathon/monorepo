@@ -5,7 +5,7 @@ export function UsdInputField(props: TextFieldProps) {
         <TextField 
             {...props}
             InputProps={{
-                endAdornment: <InputAdornment position="start">DAI</InputAdornment>,
+                endAdornment: <InputAdornment position="start">USD</InputAdornment>,
             }}>
         </TextField>
     )
