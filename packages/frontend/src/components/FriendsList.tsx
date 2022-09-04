@@ -1,7 +1,8 @@
-import { Box, Checkbox, CircularProgress, Grid, InputAdornment, TextField, Typography } from "@mui/material";
+import { Box, Checkbox, CircularProgress, Grid, Typography } from "@mui/material";
 import React, { useRef } from "react";
 import { FriendCard } from "../components/FriendCard";
 import { CenterWidth } from "./CenterWidth";
+import { UsdInputField } from './UsdInputField';
 
 export function FriendsList(props: Props) {
     return (
@@ -64,10 +65,7 @@ function UserRow({ user, onChange }: { user: UsersAmount, onChange: (user: Users
                 <FriendCard screenName={user.screenName} image={user.image || ''} name={user.name} />
             </Grid>
             <Grid item xs={5}>
-                <TextField style={{ paddingRight: '5%' }} defaultValue={user.amount} inputRef={ref}
-                    InputProps={{
-                        endAdornment: <InputAdornment position="start">DAI</InputAdornment>,
-                    }}
+                <UsdInputField style={{ paddingRight: '5%' }} defaultValue={user.amount} inputRef={ref}
                     onBlur={() => {
                         const amount = ref.current && ((ref.current as { value?: string })).value
                         if (amount) {
