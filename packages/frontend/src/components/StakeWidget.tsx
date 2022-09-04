@@ -1,4 +1,4 @@
-import { InputAdornment, TextField, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import React from "react";
 import { CenterWidth } from "./CenterWidth";
 import { UsdInputField } from "./UsdInputField";

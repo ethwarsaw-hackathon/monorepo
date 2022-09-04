@@ -4,8 +4,6 @@ import {
     Typography,
     Box,
 } from "@mui/material";
-import ReactDOM from "react-dom";
-import { Dropdown } from "react-overlays";
 import BorrowButton from "./BorrowButton";
 
 export function NavBar() {

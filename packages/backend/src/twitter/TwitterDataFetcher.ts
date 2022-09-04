@@ -1,5 +1,3 @@
-import { authClients } from "./TwitterProductionApi";
-
 
 export abstract class TwitterDataFetcher {
     public abstract setState(state: string): void;
