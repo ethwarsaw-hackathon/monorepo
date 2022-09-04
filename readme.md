@@ -1,7 +1,10 @@
 # Monorepo for the Poruka hackathon project
+Read more about the projects on [devpost](https://devpost.com/software/celumity)
+
+## Integrations
 - We used idriss [ts-library](https://github.com/idriss-crypto/ts-library) to get an Ethereum address from a twitter friendship.
 - We used [Ramp](https://ramp.network/) to allow easy onboarding of the funds.
-- We used the Union finance [data library](https://github.com/unioncredit/union-data) for fetching contract state from Union, and integrated with there smart contracts with our custom contract.
+- We used the Union finance [data library](https://github.com/unioncredit/union-data) for fetching contract state from Union, and integrated with there smart contracts with our custom contract, and the Union protocol as the creditrails.
 
 ## Project Structure
 
