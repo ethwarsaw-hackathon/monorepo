@@ -1,7 +1,7 @@
 # Monorepo for the Poruka hackathon project
 - We used idriss [ts-library](https://github.com/idriss-crypto/ts-library) to get an Ethereum address from a twitter friendship.
 - We used [Ramp](https://ramp.network/) to allow easy onboarding.
-- We used the Union finance [data library](https://github.com/unioncredit/union-data) for fetching contract state from Union. 
+- We used the Union finance [data library](https://github.com/unioncredit/union-data) for fetching contract state from Union, and integrated with there smart contracts with our custom contract.
 
 ## Project Structure
 

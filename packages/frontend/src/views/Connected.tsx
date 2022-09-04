@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { CenterWidth } from "../components/CenterWidth";
 import { FriendsList, Users, UsersAmount } from "../components/FriendsList";
 import { NavBar } from "../components/NavBar";
+import { RampWidget } from "../components/RampWidget";
 import { StakeWidget } from "../components/StakeWidget";
 import { apiFetch } from "../utils/apiFetch";
 import { Metamask } from "../utils/Metamask";
@@ -13,6 +14,7 @@ export function TwitterConnection() {
     const state = params.get('state');
     const [amount, setAmount] = useState(1000);
     const [users, setUsers] = useState<null | UsersAmount[]>();
+    const [showRamp, setShowRamp] = useState(false);
 
     useEffect(() => {
         async function callback() {
@@ -48,28 +50,40 @@ export function TwitterConnection() {
                         <NavBar />
                         <CenterWidth>
                             <Grid container style={{ padding: '5%' }}>
-                                <Grid item xs={6}>
-                                    <StakeWidget amount={amount} setAmount={setAmount} />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <FriendsList setUsers={setUsers} users={users} />
-                                </Grid>
-                                <Grid item xs={12} style={{ paddingTop: '10px' }}>
-                                    <CenterWidth>
-                                        <Metamask>
-                                            {
-                                                ({ sign }) => (
-                                                    <Button
-                                                        disabled={!peopleCount}
-                                                        variant="contained" onClick={async () => {
-                                                            await sign();
-                                                            window.location.replace(`/sent?people=${peopleCount}&amount=${amount}`)
-                                                        }}>Send</Button>
-                                                )
-                                            }
-                                        </Metamask>
-                                    </CenterWidth>
-                                </Grid>
+                                <Metamask>
+                                    {
+                                        ({ sign, balance }) => (
+                                            <React.Fragment>
+                                                <Grid item xs={6}>
+                                                    <StakeWidget balance={balance} amount={amount} setAmount={setAmount} />
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <FriendsList setUsers={setUsers} users={users} />
+                                                </Grid>
+                                                <Grid item xs={12} style={{ paddingTop: '10px' }}>
+                                                    <CenterWidth>
+                                                        <React.Fragment>
+                                                            <div>
+                                                                <RampWidget onEvent={async () => {
+                                                                    await sign();
+                                                                    window.location.replace(`/sent?people=${peopleCount}&amount=${amount}`)
+                                                                }} show={showRamp} amount={amount.toString()} />
+                                                            </div>
+                                                            <Button
+                                                                disabled={!peopleCount}
+                                                                variant="contained" onClick={async () => {
+                                                                    setShowRamp(true);
+                                                                }}
+                                                            >Send</Button>
+                                                        </React.Fragment>
+                                                    </CenterWidth>
+                                                </Grid>
+                                            </React.Fragment>
+                                        )
+                                    }
+                                </Metamask>
+
+
                             </Grid>
                         </CenterWidth>
                     </div>
@@ -79,6 +93,6 @@ export function TwitterConnection() {
                     </React.Fragment>
                 )
             }
-        </React.Fragment>
+        </React.Fragment >
     );
 }  

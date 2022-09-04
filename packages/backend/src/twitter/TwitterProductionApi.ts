@@ -30,12 +30,12 @@ export class TwitterProductionApi implements TwitterDataFetcher {
         this.state = state;
     }
 
-    public async getFollowing(): Promise<Users> {
+    public async getFollowing({userId}: {userId: string}): Promise<Users> {
         if (typeof this.state !== 'string' || !(this.state in authClients)) {
             throw new Error('You sent a fake callback.')
         }
         const client = authClients[this.state];
-        const results = await client.users.usersIdFollowing('1416633667', {
+        const results = await client.users.usersIdFollowing(userId, {
             max_results: 100,
             "user.fields": ['profile_image_url']
         })

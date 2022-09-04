@@ -11,13 +11,10 @@ import { config } from '@unioncredit/data'
 import { stateAccount } from './account/AccountState';
 import { UnionDataFetcher } from './union/UnionDataFetcher';
 import { TwitterDataFetcher } from './twitter/TwitterDataFetcher';
-
+import { FetchTwitterAddressBook } from './idriss/FetchTwitterAddressBook';
 
 const container = new MockContainer().create();
-
-
 config.set('chainId', '42')
-
 
 var app = new Koa();
 var router = new Router();
@@ -84,7 +81,10 @@ router.get('/twitter-friends', async (ctx) => {
         throw new Error('bad input')
     }
     container.get(TwitterDataFetcher).setState(state);
-    const usersResponse = await container.get(TwitterDataFetcher).getFollowing();
+    const usersResponse = await container.get(FetchTwitterAddressBook).getAddressBook({
+        // TODO: this should be exposed in the user context of twitter.
+        userId: '1416633667',
+    });
 
     ctx.response.body = {
         usersResponse
@@ -93,16 +93,6 @@ router.get('/twitter-friends', async (ctx) => {
 });
 
 router.get('/union-account-stakes', async (ctx) => {
-    /*
-        okay, so the contracts are not avaible here.
-
-        I think we create a child contract or something when the 
-        stake is started.
-
-        i.e 0xd0f46a5d48596409264d4eFc1f3B229878fFf743
-            - nooo, this is wrong. This is just antoher person domain
-            - I thin the problem is with the grapth
-    */
     if (typeof ctx.query.value === 'string') {
         ctx.response.body = await container.get(UnionDataFetcher).getStake({ address: ctx.query.value });
         ctx.response.status = 200;

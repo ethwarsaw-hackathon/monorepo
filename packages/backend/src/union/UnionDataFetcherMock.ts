@@ -4,6 +4,10 @@ import { UnionDataFetcher } from "./UnionDataFetcher";
 
 @injectable()
 export class UnionDataFetcherMock implements UnionDataFetcher {
+    public async hasAccount(): Promise<boolean> {
+        return true;
+    }
+
     public async getStake(): Promise<BigNumber> {
         return new BigNumber(1000);
     }

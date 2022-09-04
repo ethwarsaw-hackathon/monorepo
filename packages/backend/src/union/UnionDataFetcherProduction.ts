@@ -5,6 +5,10 @@ import { UnionDataFetcher } from "./UnionDataFetcher";
 
 @injectable()
 export class UnionDataFetcherProduction implements UnionDataFetcher {
+    public hasAccount(value: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    
     public async getStake({ address }: { address: string }): Promise<BigNumber> {
         const accountState = await fetchAccountStakes(
             address

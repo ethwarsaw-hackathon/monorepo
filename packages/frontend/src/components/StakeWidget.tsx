@@ -1,6 +1,7 @@
 import { InputAdornment, TextField, Typography } from "@mui/material";
 import React from "react";
 import { CenterWidth } from "./CenterWidth";
+import { RampWidget } from "./RampWidget";
 
 
 export function StakeWidget(props: Props) {
@@ -29,5 +30,6 @@ export function StakeWidget(props: Props) {
 
 interface Props {
     amount: number;
+    balance?: number | null;
     setAmount: (value: number) => void;
 }

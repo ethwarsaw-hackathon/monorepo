@@ -1,19 +1,25 @@
 import { IdrissCrypto } from "idriss-crypto";
+import { injectable } from "inversify";
+import { UnionDataFetcher } from "../union/UnionDataFetcher";
 
+@injectable()
 export class ResolveTwitterUsernameInteractor {
+    constructor(
+        private unionDataFetcher: UnionDataFetcher,
+    ) { }
+
     public async getEthereumAddress({ screenname }: { screenname: string }) {
         const idriss = new IdrissCrypto();
         const resultsTwitter = await idriss.resolve(`@${screenname}`);
-        console.log(resultsTwitter);
-        if (Object.entries(resultsTwitter).length === 0) {
+
+        const foundAccount = Object.values(resultsTwitter).find((value) => this.unionDataFetcher.hasAccount(value));
+
+        if (!foundAccount || Object.entries(resultsTwitter).length === 0) {
             return null;
+        } else if (foundAccount) {
+            return foundAccount;
         } else {
-            /*
-                { 'Metamask ETH': '0x67CE139C5DCC845F08CE4b4E25B96B005f326B9B' }
-                // TODO resolve to a single address
-            */
-            return 'maybe';
+            return Object.values(resultsTwitter)[0];
         }
     }
 }
-

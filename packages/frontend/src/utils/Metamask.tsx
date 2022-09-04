@@ -5,6 +5,8 @@ export function Metamask(props: Props) {
     const ethereum = (window as { ethereum?: any }).ethereum;
     const [accountAddress, setAccountAddress] = useState<string | null>();
     const [signedMessage, setSignedMessage] = useState<boolean>(false);
+    const [balance, setBalance] = useState<number | null>(1000);
+    
     if (typeof ethereum === 'undefined') {
         return (
             <React.Fragment>No metamask :(</React.Fragment>
@@ -24,6 +26,11 @@ export function Metamask(props: Props) {
                 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
                 setAccountAddress(accounts[0]);
             },
+            balance,
+            setBalance: async () => {
+                //  TODO: This should be exposed throught metamask, but could also just be an api call to the backend.
+                //  Hardcoded for now.
+            }
         })
     )
 }
@@ -33,6 +40,8 @@ interface Props {
     children: (options: {
         signedMessage: boolean;
         accountAddress?: string | null;
+        balance?: number | null;
+        setBalance: () => void;
         requestAccount: () => Promise<void>;
         sign: () => Promise<void>;
     }) => JSX.Element;
